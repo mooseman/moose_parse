@@ -78,6 +78,8 @@ parse_seq("aa23aabb67brgr", "23", "67")
 
 parse_seq("The quick brown fox", "The", "fox")  
 
+parse_seq("The quick brown fox", "fox", "quick")  
+
 parse_seq([12, 23, 45, 32], "23, 45", "32" ) 
 
 
