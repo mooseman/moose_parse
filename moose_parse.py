@@ -24,6 +24,14 @@ def paren(data, first, last):
       print "Sorry" 
 
 
+# A parser to parse things in sequence 
+def parse_seq(data, first, next): 
+    if (first and next) in data and data.index(next) > data.index(first): 
+        print "Next followed first"
+    else:
+        print "Nope... sorry!" 
+
+
 #  Create a separate "action class" for a parser 
 class action(): 
   def found(self): 
@@ -51,7 +59,8 @@ paren("aaabb", "aaa", "bb")
 
 paren("aaaxbb", "aaa", "bb") 
              
-                     
+
+# Try the "many" parser class                      
 a = many()                      
 a.parse("aabfdaa", "a") 
 
@@ -61,6 +70,15 @@ a.parse("abcde", "a")
 
 a.parse("aaabgfdaaaedsrfaaaghytrf", "aaa") 
 
+
+#  Parse sequences 
+parse_seq("aaaabbbrgr", "bbb", "rgr")
+
+parse_seq("aa23aabb67brgr", "23", "67") 
+
+parse_seq("The quick brown fox", "The", "fox")  
+
+parse_seq([12, 23, 45, 32], "23, 45", "32" ) 
 
 
 
