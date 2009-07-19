@@ -5,14 +5,18 @@
 #  Just some simple code to play around with parsers 
 #  Author: Andy Elvey 
 #  This code is released to the public domain.  
+#  TO DO -Need to be able to combine grammars in sequence 
+#  so that we can have things like this - 
+#  grammar = seq(parser1, parser2, parser3) 
+ 
+
 
 
 def parse(data, stuff): 
-   for x in data: 
-     if x == stuff: 
-         print "Found!" 
-     else: 
-         pass           
+   if stuff in data:  
+     print "Found!" 
+   else: 
+     print "Not found" 
          
 # A parser to parse two things (like parens, or whatever) 
 # separated by other stuff.  
@@ -24,6 +28,46 @@ def paren(data, first, last):
       print "Sorry" 
 
 
+#  An "add" class to process data when it is used in 
+#  the parse_seq function 
+#  NOTE - this is how the "all" and "any" functions are used - 
+#  a[3] = "little" 
+#  >>> all(x.isalpha() for x in a[3])
+#  True
+#  >>> any(x.isdigit() for x in a[3])
+#  False
+
+
+class add(object): 
+   def init(self): 
+      self.dict = {} 
+      self.nextkey = 0 
+            
+   def listproc(self, data): 
+      for k, v in enumerate(data, self.nextkey): 
+         self.dict[k] = v  
+      self.nextkey += len(data) 
+      
+   def tupleproc(self, data): 
+      for k, v in enumerate(data, self.nextkey): 
+         self.dict[k] = v  
+      self.nextkey += len(data)       
+ 
+   def stringproc(self, data, splitchar): 
+      self.templist = data.split(splitchar) 
+      if all(x.isdigit() for x in self.templist): 
+         x = int(x) 
+      else: 
+         pass 
+      for k, v in enumerate(self.templist, self.nextkey): 
+         self.dict[k] = v  
+      self.nextkey += len(data)          
+           
+   def display(self): 
+      print self.dict 
+           
+           
+                  
 # A parser to parse things in sequence 
 def parse_seq(data, first, next): 
     if (first and next) in data and data.index(next) > data.index(first): 
@@ -81,6 +125,8 @@ parse_seq("The quick brown fox", "The", "fox")
 parse_seq("The quick brown fox", "fox", "quick")  
 
 parse_seq([12, 23, 45, 32], "23, 45", "32" ) 
+
+
 
 
 
