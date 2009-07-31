@@ -128,6 +128,36 @@ parse_seq([12, 23, 45, 32], "23, 45", "32" )
 
 
 
+#  A class which overloads the ">" operator. 
+class test(object):
+   def __gt__(self, other):
+      if other == "foo":
+         print "found!" 
+      else: 
+         print "not found" 
+         
+   def seq(self, data, first, next): 
+    if (first and next) in data and data.index(next) > data.index(first): 
+        print "Next followed first"
+    else:
+        print "Next did not follow first"  
+        
+                     
+#  Test the class 
+a = test()
+a.__gt__("foo")   #  "found!" 
+a.__gt__("bar")   #  "not found" 
+
+a > "foo"         #  "found!" 
+a > "bar"         #  "not found"  
+
+a.seq("Mary had a great big moose", "great", "big") 
+a.seq("Mary had a great big moose", "big", "great") 
+
+
+
+
+
 
 
 
