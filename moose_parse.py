@@ -15,15 +15,14 @@
  
 class node(object): 
   def __init__(self): 
-     self.name = self.type = self.next = None
+     self.name = self.next = None
      self.ndict = {}
     
 #  Set a node's properties      
-  def set(self, name, type, next): 
-     self.name = name
-     self.type = type 
+  def set(self, name, next): 
+     self.name = name     
      self.next = next 
-     self.ndict.update({ self.name:  [self.type, self.next] } )  
+     self.ndict.update({ self.name:  [self.next] } )  
      
 #  Get the properties of a node      
   def get(self, node): 
@@ -47,11 +46,16 @@ class grammar(node):
      self.nodelist = nodelist 
      self.stmt_dict.update({self.name: self.nodelist })      
 
-#  Add a statement.       
-  def add(self, name, type):
-     self.name = name    
-     self.type = type 
-     
+#  Add a node to a statement.       
+  def add(self, stmtname, nodename, nextnode): 
+     if grammar_dict.has_key(stmtname): 
+        grammar_dict.update({stmtname: [nodename, nextnode] }) 
+     else: 
+        self.stmtname = stmtname 
+        self.nodename = nodename 
+        self.nextnode = nextnode 
+        grammar_dict.update({self.stmtname: [self.nodename, self.nextnode] }) 
+           
 #  Action method, to be used with nodes, statements.      
   def action(self): 
      pass       
