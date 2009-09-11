@@ -11,21 +11,45 @@
 
 #  A grammar has statements and tokens. Tokens need to have a "next" 
 #  attribute which points to the next possible token. 
-#  A token can have none, one, or more than one "next" token.  
+#  A token can have none, one, or more than one possible "next" token.  
  
 class node(object): 
   def __init__(self): 
      self.name = self.type = self.next = None
+     self.ndict = {}
+    
+#  Set a node's properties      
+  def set(self, name, type, next): 
+     self.name = name
+     self.type = type 
+     self.next = next 
+     self.ndict.update({ self.name:  [self.type, self.next] } )  
      
-       
+#  Get the properties of a node      
+  def get(self, node): 
+     if ndict.has_key(node): 
+        return ndict[node] 
+     
+               
 #  Grammar class 
+#  A grammar will be made of a series of statements. 
+#  A statement will be made of a series of nodes (tokens).  
 class grammar(node): 
   def init(self): 
-     self.gdict = {} 
+     self.grammar_dict = self.stmt_dict = self.node_dict = {} 
+     
+#  A statement method 
+#  Stmt should be made of a series of nodes.  The last 
+#  node will not have a "next" attribute.   
+  def stmt(self, name, nodelist): 
+     self.name = name 
+     # The nodes which make up this statement 
+     self.nodelist = nodelist 
+     self.stmt_dict.update({self.name: self.nodelist })      
 
-#  Add a node or statement      
+#  Add a statement.       
   def add(self, name, type):
-     self.name = name   
+     self.name = name    
      self.type = type 
      
 #  Action method, to be used with nodes, statements.      
