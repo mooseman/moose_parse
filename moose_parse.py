@@ -18,11 +18,15 @@ class node(object):
      self.name = self.next = None
      self.ndict = {}
     
-#  Set a node's properties      
-  def set(self, name, next): 
+#  Set a node's properties 
+#  A node can have a name, a type (e.g. token, operator, identifier), 
+#  a value and a "next node" attribute.       
+  def set(self, name, type, value, next): 
      self.name = name     
+     self.type = type 
+     self.value = value 
      self.next = next 
-     self.ndict.update({ self.name:  [self.next] } )  
+     self.ndict.update({ self.name: [self.type, self.value, self.next] } )  
      
 #  Get the properties of a node      
   def get(self, node): 
