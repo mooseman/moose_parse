@@ -7,7 +7,19 @@
 #  This code is released to the public domain.  
 #  TO DO -Need to be able to combine grammars in sequence 
 #  so that we can have things like this - 
-#  grammar = seq(parser1, parser2, parser3) 
+
+#  Note - By far the easiest way to organise the grammar would be to 
+#  code it from the "bottom up", like yeanpypa. This is the reverse of
+#  how BNF grammars are displayed, but it is much easier to implement. 
+
+
+#  grammar = oneormore(stmt) 
+#  stmt = oneof(stmt1, stmt2, stmt3, stmt4) 
+#  stmt1 = seq([token1, token2, token3, token4, token5, token6]) 
+#  stmt2 = seq([token1, token2, token3]) 
+#  token1 = oneof(foo, bar) 
+#  token2 = oneof(["this", "is", "just", "a", "test"])  
+
 
 #  A grammar has statements and tokens. Tokens need to have a "next" 
 #  attribute which points to the next possible token. 
@@ -25,7 +37,7 @@ class node(object):
      self.name = name     
      self.type = type 
      self.value = value 
-     self.next = next 
+     self.next = node()  
      self.ndict.update({ self.name: [self.type, self.value, self.next] } )  
      
 #  Get the properties of a node      
@@ -33,11 +45,25 @@ class node(object):
      if ndict.has_key(node): 
         return ndict[node] 
      
+     
+#  A statement class. Statements will be made up of a series of nodes.     
+class stmt(node): 
+  def init(self): 
+     self.stmt_dict = {} 
+
+  def add(self, node): 
+     self.node = node()      
+     self.stmt_dict.update({ self.node.name: [self.node.type, 
+          self.node.value, self.node.next] }) 
+     
+  def display(self): 
+     print self.stmt_dict       
+     
                
 #  Grammar class 
 #  A grammar will be made of a series of statements. 
 #  A statement will be made of a series of nodes (tokens).  
-class grammar(node): 
+class grammar(stmt): 
   def init(self): 
      self.grammar_dict = self.stmt_dict = self.node_dict = {} 
      
