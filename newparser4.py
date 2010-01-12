@@ -48,6 +48,30 @@ def punct(str):
    else: 
       return 0             
       
+# A "literal". Look for a given string. 
+def lit(mylit, str):       
+   if str == mylit: 
+      return 1 
+   else: 
+      return 0       
+        
+         
+def any_p(func, args ): 
+   count = 0 
+   for x in args:  
+      if func(x): 
+         count += 1                
+      else: 
+         pass 
+   if count > 0: 
+      return 1 
+   else: 
+      return 0       
+      
+         
+print any_p(digit, "foo3") 
+print any_p(digit, "bar")          
+         
          
 # Test 
 print alpha("abc") 
@@ -60,8 +84,14 @@ print space("   ")
 print space("   a") 
 print punct("%^&*") 
 print punct("%^&*a") 
+print lit("def", "def") 
+print lit("def", "defg") 
 
 
+# Now, we can start to do the main parse functions. Things like 
+# any, none, and, or, not, in, not_in, sepby and so on. 
+# After that, we can look at "tokens" (words). That is when we can 
+# also look at doing a "next" method or function, for the next token.  
 
 
 
