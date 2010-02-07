@@ -73,6 +73,8 @@ print any_p(digit, "foo3")
 print any_p(digit, "bar")          
          
          
+         
+         
 # Test 
 print alpha("abc") 
 print alpha("abc1")

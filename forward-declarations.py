@@ -6,7 +6,28 @@
 
 #  Need to set __attr__ .  
 
-class test(object): 
+# A function which has "placeholders" for parts of a grammar which are 
+# calculated later.  
+class lazy(object):  
+   def __init__(self):  
+      self.toks = {} 
+ 
+   def eval(self): 
+      pass 
+
+
+
+class test(lazy): 
+  def __init__(self): 
+     self.mydict = {} 
+     
+  def add(self, attr): 
+     if not hasattr(self): 
+        self.setattr(attr) 
+     else: 
+        pass       
+  
+  
   
   def run(self):       
     self.foo = self.bar + self.baz     
@@ -14,6 +35,9 @@ class test(object):
     self.baz = 58 
     self.splodge = 17 
     self.splurge = 34 
+    # Everything has now been defined, so calculate the values of 
+    # all attributes.  
+    self.eval() 
          
   def display(self): 
     print self.foo, self.bar, self.baz 
