@@ -1,9 +1,9 @@
 
 
 #  pdparse.py  
-#  Acknowledgement - Most of this code comes from the public-domain 
-#  Yeanpypa parser, done by Markus Bruckner. Very many thanks to 
-#  Markus for creating Yeanpypa!  
+#  Acknowledgement - This code is heavily inspired by (and some of it 
+#  comes from) the public-domain Yeanpypa parser, done by Markus 
+#  Bruckner. Very many thanks to Markus for creating Yeanpypa!  
 
 #  Here, we see if it is possible to condense some of the Yeanpypa code 
 #  down to a very small and simple parsing framework.  
@@ -72,6 +72,9 @@ class OrRule(object):
 foo = AndRule("abc", "def")  
 bar = OrRule("abc", "def") 
 
+# This should fail. "abc" is not followed by "def" (or anything). 
+foo.match("abc") 
+
 #  This should succeed 
 foo.match("abc def") 
 
@@ -96,7 +99,8 @@ bar.match("abc foo")
 # This should succeed. 
 bar.match("def foo") 
 
-
+# This should succeed. 
+bar.match("def foo test") 
       
       
       
