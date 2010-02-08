@@ -1,13 +1,15 @@
 
 ***  README *** 
 
- This is just a very simple Python parser library to play around with a 
-few ideas regarding Python and parsing.  
+This will eventually be a very small and simple Python parser library. 
 
- I'm also doing it as an aid in becoming more familiar with classes and 
-OOP in Python.  
+STATUS (as at 8th Feb 2010):  I've gone right "back to basics", and am 
+starting again using some code from the public-domain Yeanpypa parsing 
+library by Markus Bruckner.  Many thanks to Markus for doing Yeanpypa!  
 
- Anyway, it's public-domain... "share and enjoy....."  :)  
+ This code is in the public-domain.  
+ "Share and enjoy....."    :)  
+
 - mooseman 
 
 
