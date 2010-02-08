@@ -26,11 +26,18 @@ class AndRule(object):
     
     def match(self, input):                
         retval = []
-        for rule in self.subrules:
-           if str.split(input) == rule:             
+        for rule, tok in zip(self.subrules, list(str.split(input)) ):  
+           if tok == rule:             
               retval.append(input)            
            else: 
-              print "Parse failed."
+              pass 
+           
+        # Is the retval list the same length as the subrules list? 
+        # If so, the parse succeeeded. If not, the parse failed.        
+        if len(retval) == len(self.subrules):       
+           print "Parse succeeded!" 
+        else:    
+           print "Parse failed."
         
         
 # TODO: implement a greedy version of the OR rule (matches the longer match of the two)
@@ -46,10 +53,10 @@ class OrRule(object):
         return "(%s)" % ' '.join(map(str, self.subrules))    
 
     def match(self, input):
-        retval = []         
-        for rule in self.subrules:
-           if input == rule:            
-              retval.append(input)                
+        retval = []       
+        for rule, tok in zip(self.subrules, list(str.split(input)) ):               
+           if tok in self.subrules: 
+              retval.append(tok)                
            else: 
               pass  
               
@@ -65,11 +72,29 @@ class OrRule(object):
 foo = AndRule("abc", "def")  
 bar = OrRule("abc", "def") 
 
+#  This should succeed 
 foo.match("abc def") 
+
+# This should fail - tokens in the wrong order 
+foo.match("def abc") 
+
+# This should fail 
+foo.match("abc deg") 
+
+# This should succeed. 
 bar.match("abc") 
 
+# This should succeed. 
+bar.match("def") 
 
+# This should succeed. 
+bar.match("abc def") 
 
+# This should succeed. 
+bar.match("abc foo") 
+
+# This should succeed. 
+bar.match("def foo") 
 
 
       
