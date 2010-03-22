@@ -11,9 +11,60 @@
 
 import string 
 
+
+class Rule(object):    
+    action     = None
+    hide_token = False
+
+    def match(input_reader):        
+        pass
+
+    def __add__(self, second_rule):        
+        return AndRule(self, second_rule)
+
+    def __or__(self, second_rule):        
+        return OrRule(self, second_rule)
+
+    def setAction(self, action):        
+        self.action = action
+        return self
+
+    def callAction(self, param):        
+        if self.action:
+            if isinstance(param, list):
+                return self.action(param)
+            else:
+                return self.action([param])
+        else:
+            return param
+
+    def hide(self):        
+        self.hide_token = True
+        return self
+
+    def returnToken(self, token):        
+        if self.hide_token:
+            return None
+        else:
+            return token
+
+
+class Literal(Rule):    
+    def __init__(self, string):    
+        self.string = string
+
+    def __str__(self):        
+        return "\"%s\"" % self.string
+
+    def match(self, input):                
+        if input == self.string:
+           return self.string 
+        else: 
+           return "Parse failed."  
+
             
 #  Two or more rules matching directly after each other.        
-class AndRule(object):    
+class AndRule(Rule):    
     def __init__(self, left_rule, right_rule):      
         self.subrules = [left_rule, right_rule]
 
@@ -38,10 +89,11 @@ class AndRule(object):
            print "Parse succeeded!" 
         else:    
            print "Parse failed."
+        #return self.returnToken(self.callAction(retval))
         
         
 # TODO: implement a greedy version of the OR rule (matches the longer match of the two)
-class OrRule(object):    
+class OrRule(Rule):    
     def __init__(self, left_rule, right_rule):       
         self.subrules  = [left_rule, right_rule]
 
@@ -56,7 +108,8 @@ class OrRule(object):
         retval = []       
         for rule, tok in zip(self.subrules, list(str.split(input)) ):               
            if tok in self.subrules: 
-              retval.append(tok)                
+              retval.append(tok)   
+              #return self.returnToken(self.callAction(tok))             
            else: 
               pass  
               
@@ -69,41 +122,44 @@ class OrRule(object):
         
                                             
 #  Create a simple grammar 
-foo = AndRule("abc", "def")  
-bar = OrRule("abc", "def") 
+foo = Literal("abc") 
+bar = Literal("def")  
+
+baz = AndRule(foo, bar)  
+test = OrRule(foo, bar) 
 
 # This should fail. "abc" is not followed by "def" (or anything). 
-foo.match("abc") 
+baz.match("abc") 
 
 # This should succeed 
-foo.match("abc def") 
+baz.match("abc def") 
 
 # This should succeed.   
-foo.match("abc def ghi") 
+baz.match("abc def ghi") 
 
 # This should fail - tokens in the wrong order 
-foo.match("def abc") 
+baz.match("def abc") 
 
 # This should fail 
-foo.match("abc deg") 
+baz.match("abc deg") 
 
 # This should succeed. 
-bar.match("abc") 
+test.match("abc") 
 
 # This should succeed. 
-bar.match("def") 
+test.match("def") 
 
 # This should succeed. 
-bar.match("abc def") 
+test.match("abc def") 
 
 # This should succeed. 
-bar.match("abc foo") 
+test.match("abc foo") 
 
 # This should succeed. 
-bar.match("def foo") 
+test.match("def foo") 
 
 # This should succeed. 
-bar.match("def foo test") 
+test.match("def foo test") 
       
       
       

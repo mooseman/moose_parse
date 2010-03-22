@@ -11,9 +11,80 @@
 
 import string 
 
+
+class Rule(object):    
+    action     = None
+    hide_token = False
+
+    def match(input_reader):        
+        pass
+
+    def __add__(self, second_rule):        
+        return AndRule(self, second_rule)
+
+    def __or__(self, second_rule):        
+        return OrRule(self, second_rule)
+
+    def setAction(self, action):        
+        self.action = action
+        return self
+
+    def callAction(self, param):        
+        if self.action:
+            if isinstance(param, list):
+                return self.action(param)
+            else:
+                return self.action([param])
+        else:
+            return param
+
+    def hide(self):        
+        self.hide_token = True
+        return self
+
+    def returnToken(self, token):        
+        if self.hide_token:
+            return None
+        else:
+            return token
+
+
+class Literal(Rule):    
+    def __init__(self, string):    
+        self.string = string
+
+    def __str__(self):        
+        return "\"%s\"" % self.string
+
+    def match(self, input):                
+        if input == self.string:
+           return self.string 
+        else: 
+           return "Parse failed."  
+
             
+class Keyword(Rule): 
+    def __init__(self, keyword): 
+        self.keyword = keyword 
+        
+    def save(self): 
+        if not self.hasattr(self.keyword): 
+           self.setattr(self.keyword, self.keyword) 
+        else: 
+           pass        
+               
+    def __str__(self): 
+        return "\"%s\"" % self.string             
+        
+    def match(self, input): 
+        if input == self.string: 
+           return self.string 
+        else: 
+           return "Parse failed." 
+           
+                  
 #  Two or more rules matching directly after each other.        
-class AndRule(object):    
+class AndRule(Rule):    
     def __init__(self, left_rule, right_rule):      
         self.subrules = [left_rule, right_rule]
 
@@ -38,10 +109,11 @@ class AndRule(object):
            print "Parse succeeded!" 
         else:    
            print "Parse failed."
+        #return self.returnToken(self.callAction(retval))
         
         
 # TODO: implement a greedy version of the OR rule (matches the longer match of the two)
-class OrRule(object):    
+class OrRule(Rule):    
     def __init__(self, left_rule, right_rule):       
         self.subrules  = [left_rule, right_rule]
 
@@ -56,7 +128,8 @@ class OrRule(object):
         retval = []       
         for rule, tok in zip(self.subrules, list(str.split(input)) ):               
            if tok in self.subrules: 
-              retval.append(tok)                
+              retval.append(tok)   
+              #return self.returnToken(self.callAction(tok))             
            else: 
               pass  
               
@@ -67,7 +140,25 @@ class OrRule(object):
         else: 
            print "Parse failed"    
         
-                                            
+         
+class parser(object): 
+    def __init__(self): 
+       self.ruledict = {} 
+    
+    # Add a rule to the parser    
+    #  E.g. "foo", add, ["this", "is", "a", "test"]    
+    def add(self, rulename, ruletype, tokenlist): 
+       self.ruledict.update({rulename: ruletype, tokenlist})  
+       
+    def match(self, rulename, stmt): 
+       if self.ruledict.has_key(rulename): 
+          
+       
+       
+    def display(self): 
+       print self.ruledict         
+        
+                                                            
 #  Create a simple grammar 
 foo = AndRule("abc", "def")  
 bar = OrRule("abc", "def") 
@@ -106,7 +197,9 @@ bar.match("def foo")
 bar.match("def foo test") 
       
       
-      
+baz = Keyword(test) 
+
+baz.match(test)       
       
       
       

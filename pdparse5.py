@@ -11,7 +11,48 @@
 
 import string 
 
+# Parse a literal string.
+class Literal(object):   
+    def __init__(self, string):   
+        self.string = string
+
+    def __str__(self):       
+        return "\"%s\"" % self.string
+
+    def match(self, input):               
+        if input == self.string:
+           #return self.string
+           print "Literal parse succeeded!"
+        else:
+           print "Parse failed."
+           
+    def __add__(self,other):
+        return AndRule(self.string,other.string)
+       
+    def __or__(self,other):
+        return OrRule(self.string,other.string)
+
             
+class Keyword(object): 
+    def __init__(self, keyword): 
+        self.keyword = keyword 
+        
+    def save(self): 
+        if not self.hasattr(self.keyword): 
+           self.setattr(self.keyword, self.keyword) 
+        else: 
+           pass        
+               
+    def __str__(self): 
+        return "\"%s\"" % self.string             
+        
+    def match(self, input): 
+        if input == self.string: 
+           return self.string 
+        else: 
+           return "Parse failed." 
+           
+                  
 #  Two or more rules matching directly after each other.        
 class AndRule(object):    
     def __init__(self, left_rule, right_rule):      
@@ -38,6 +79,7 @@ class AndRule(object):
            print "Parse succeeded!" 
         else:    
            print "Parse failed."
+        #return self.returnToken(self.callAction(retval))
         
         
 # TODO: implement a greedy version of the OR rule (matches the longer match of the two)
@@ -56,7 +98,8 @@ class OrRule(object):
         retval = []       
         for rule, tok in zip(self.subrules, list(str.split(input)) ):               
            if tok in self.subrules: 
-              retval.append(tok)                
+              retval.append(tok)   
+              #return self.returnToken(self.callAction(tok))             
            else: 
               pass  
               
@@ -67,7 +110,15 @@ class OrRule(object):
         else: 
            print "Parse failed"    
         
-                                            
+         
+class parser(object): 
+    def __init__(self): 
+       self.ruledict = {} 
+                  
+    def display(self): 
+       print self.ruledict         
+        
+                                                            
 #  Create a simple grammar 
 foo = AndRule("abc", "def")  
 bar = OrRule("abc", "def") 
@@ -106,9 +157,15 @@ bar.match("def foo")
 bar.match("def foo test") 
       
       
+# baz = Keyword(test) 
+
+# baz.match(test)       
       
-      
-      
+test = Literal("try") + Literal("this") 
+
+test.match("try this") 
+
+       
       
       
               
