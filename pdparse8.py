@@ -14,8 +14,9 @@ import string, curses, curses.ascii, itertools
 # A literal string.
 class literal(object): 
    def __init__(self, stuff): 
-      self.type = "literal"       
-      return "\"%s\"" % stuff  
+      self.type = "literal"   
+      def match(self): 
+         return "\"%s\"" % stuff  
    
 class alpha(object): 
    def __init__(self, stuff): 
@@ -85,7 +86,8 @@ print gettype(c)
 d = digit(123) 
 print gettype(d) 
 
-
+e = literal("foo") 
+print gettype(e) 
 
 
 # For each of these parsers, match the stored pattern type against the 
