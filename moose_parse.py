@@ -18,8 +18,8 @@ import logging
 
 class InputReader(object):
    def __init__(self, string, ignore_white):
-      self.current_pos  = 0
-	  self.stack        = []
+      self.current_pos  = 0 
+      self.stack        = []
       self.string       = string
       self.ignore_white = ignore_white   
 
@@ -64,7 +64,8 @@ class InputReader(object):
 
    def deleteCheckpoint(self):
       if len(self.stack) == 0:
-            raise EmptyStackException()
+         pass    
+         #raise EmptyStackException()
       self.stack = self.stack[:-1] 
 
    def fullyConsumed(self):
@@ -75,6 +76,15 @@ class InputReader(object):
       
    def setIgnoreState(self, state):
       self.ignore_white = state         
+
+
+class ParseException():  
+   def __init__(self): 
+      return None 
+
+class EndOfStringException():  
+   def __init__(self): 
+      return None 
 
 
 
@@ -92,6 +102,9 @@ class ParseResult(object):
 
 
 class Rule(object): 
+  action     = None
+  hide_token = False
+
   def match(input_reader): 
      pass 
      
@@ -105,6 +118,25 @@ class Rule(object):
      self.action = action 
      return self 
      
+  def callAction(self, param): 
+     if self.action:
+        if isinstance(param, list):
+           return self.action(param)
+        else:
+           return self.action([param])
+     else:
+        return param  
+  
+  def hide(self):
+     self.hide_token = True
+     return self 
+    
+  def returnToken(self, token):
+     if self.hide_token:
+        return None
+     else:
+        return token    
+    
     
     
 class Literal(Rule):
@@ -123,11 +155,13 @@ class Literal(Rule):
             if string != self.string: 
                 # Roll back the parse 
                 input_reader.rollback()
-                raise ParseException("Expected '%s' at position %d. Got '%s'" % (self.string, input_reader.getPos(), string))
+                #raise ParseException()
+                #raise ParseException("Expected '%s' at position %d. Got '%s'" % (self.string, input_reader.getPos(), string))
         except EndOfStringException: 
             # End of string reached without a match 
             input_reader.rollback()
-            raise ParseException("Expected '%s' at end of string" % self.string)
+            #raise ParseException()
+            #raise ParseException("Expected '%s' at end of string" % self.string)
         # We have a successful match, so delete the checkpoint.  
         input_reader.deleteCheckpoint()
         logging.debug("Matched \"%s\"" % self)
@@ -203,23 +237,5 @@ def parseit(grammar_name, input):
        print "Fail"  
 
 
-#  Test the code 
-a = foo("test") 
-
-b = foo(" this") 
-
-c = a + b 
-
-d = a | b 
-
-print c, d  
-
- 
-
-
-
-   
-        
-                 
 
 
