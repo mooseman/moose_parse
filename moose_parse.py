@@ -3,11 +3,13 @@
 #  moose_parse.py
 
 #  This parser is basically a somewhat stripped-down version of the 
-#  Yeanpypa parser by Markus Brueckner. Very many thanks to Markus 
-#  for doing Yeanpypa.  
+#  public domain Yeanpypa parser by Markus Brueckner. Very many thanks 
+#  to Markus for doing Yeanpypa.  
 #  The main differences: Some of the leading underscores have been 
 #  removed from variable names. Some code comments have been removed.  
-#  Some error-checking code has been removed.   
+#  The exception-handling code has been removed. This is just my own 
+#  preference - I like to be hands-on with the parser code, without 
+#  exceptions code getting in the way and cluttering things up. 
 
 #  This code is released to the public domain.  
 #  "Share and enjoy..."  ;)     
@@ -192,10 +194,9 @@ class AndRule(Rule):
             input_reader.deleteCheckpoint()
         except ParseException:
             input_reader.rollback()
-            raise
+            #raise
         return self.returnToken(self.callAction(retval))   
     
-
 
 class OrRule(Rule):    
      def __init__(self, left_rule, right_rule): 
@@ -209,18 +210,20 @@ class OrRule(Rule):
         return self 
         
      def match(self, input_reader): 
-        input_reader.checkPoint()
-        for rule in self.subrules:
-            try:
-                rule_match = rule.match(input_reader)
-                input_reader.deleteCheckpoint()
-                return self.returnToken(self.callAction(rule_match))
-            except ParseException:
-                pass
-        input_reader.rollback()
-        raise ParseException("None of the subrules of %s matched." % str(self))
-
-    
+        retval = [] 
+        try: 
+           input_reader.checkPoint()
+           for rule in self.subrules:
+               result = rule.match(input_reader) 
+               if result != None: 
+                  retval.append(result) 
+           input_reader.deleteCheckpoint()
+        except ParseException:
+            input_reader.rollback()
+            #raise
+        return self.returnToken(self.callAction(retval))   
+           
+        
 def parse(parser, string, ignore_white=True): 
     input_reader = InputReader(string, ignore_white)
     tokens = parser.match(input_reader)
