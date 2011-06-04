@@ -630,6 +630,7 @@ class Optional(Rule):
         except ParseException:
             pass
             
+            
 class OneOrMore(Rule):
     """
     Match a rule once or more. This rule matches its subrule at least
@@ -671,6 +672,7 @@ class OneOrMore(Rule):
         except ParseException:
             pass
         return self.returnToken(self.callAction(retval))
+
 
 class Combine(Rule):
     """
@@ -738,6 +740,7 @@ def Word(param):
         return Combine(MatchWhite(OneOrMore(AnyOf(param))))
     else:
         return Combine(MatchWhite(OneOrMore(param)))
+
 
 class ZeroOrMore(Rule):
     """
